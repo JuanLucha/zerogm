@@ -1,0 +1,60 @@
+{
+  "name": "zerogm",
+  "displayName": "ZeroGM",
+  "description": "GM simulator to play any roleplaying games solo, but specially Fate RPG or Fate Accelerated RPG",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.38.0"
+  },
+  "publisher": "juanlucha",
+  "author": {
+    "name": "Juan Lucha",
+    "email": "juanlucha@gmail.com"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "roleplaying",
+    "game",
+    "dice",
+    "fate",
+    "rpg",
+    "gm simulator",
+    "game master simulator"
+  ],
+  "icon": "zerogm-logo.png",
+  "keybindings": [
+    {
+      "key": "shift+cmd+[Period]",
+      "command": "extension.zeroGM",
+      "when": "editorTextFocus"
+    }
+  ],
+  "activationEvents": [
+    "onCommand:extension.zeroGM"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.zeroGM",
+        "title": "Zero GM"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/vscode": "^1.38.0",
+    "eslint": "^5.13.0",
+    "glob": "^7.1.4",
+    "mocha": "^6.1.4",
+    "typescript": "^3.3.1",
+    "vscode-test": "^1.2.0"
+  }
+}
