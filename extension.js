@@ -130,9 +130,9 @@ function checkSideOutcome(fateCheck) {
     }
   })
 
-  if (positives > negatives) {
+  if (positives > 2) {
     sideOutcome = ` y ocurre algo positivo relacionado con ${getOutcomeTarget()}`
-  } else if (negatives > positives) {
+  } else if (negatives > 2) {
     sideOutcome = ` y ocurre algo negativo relacionado con ${getOutcomeTarget()}`
   }
 

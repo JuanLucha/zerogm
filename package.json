@@ -2,7 +2,7 @@
   "name": "zerogm",
   "displayName": "ZeroGM",
   "description": "GM simulator to play any roleplaying games solo, but specially Fate RPG or Fate Accelerated RPG",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "url": "https://github.com/Ravencrow/zerogm",
     "type": "git"
