@@ -43,10 +43,10 @@ function manageMainAction(selection) {
   if (selection === '1. tirada') {
     vscode.window
       .showInputBox({
-        placeHolder: '¿Cómo de probable? (-4 a +4)',
+        placeHolder: '¿Cómo de probable? (-4 a +4 si es una pregunta al master)',
         validateInput: value => {
-          if (value < -4 || value > 4) {
-            return `El valor debe estar comprendido entre -4 y +4`
+          if (isNaN(value)) {
+            return `El valor debe ser un número`
           }
         }
       })
