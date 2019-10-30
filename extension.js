@@ -2,11 +2,21 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode')
 const times = require('lodash').times
+const languagesContent = require('./localization/index')
 
-const options = {
-  oraculo: '1. oráculo',
-  tirada: '2. tirada'
+const mementoKeys = {
+  language: 'language'
 }
+
+const defaultLanguage = 'en'
+
+// Will store all the localized strings
+let content
+
+// Main menu options
+let options
+
+let outcomeTargets
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -19,14 +29,23 @@ function activate (context) {
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "zerogm" is now active!')
 
+  // Get the language and set the variables
+  let language = context.globalState.get(mementoKeys.language) || defaultLanguage
+  content = languagesContent[language]
+  outcomeTargets = content.diceCheck.outcomes
+  options = {
+    oracle: `1. ${content.mainMenu.oracle}`,
+    diceCheck: `2. ${content.mainMenu.diceCheck}`
+  }
+
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('extension.zeroGM', function () {
+  let disposable = vscode.commands.registerCommand('extension.zeroGM', () => {
     // The code you place here will be executed every time your command is executed
 
     // Display a message box to the user
-    vscode.window.showQuickPick([options.oraculo, options.tirada]).then(manageMainAction)
+    vscode.window.showQuickPick([options.oracle, options.diceCheck]).then(manageMainAction)
   })
 
   context.subscriptions.push(disposable)
@@ -36,16 +55,14 @@ exports.activate = activate
 // this method is called when your extension is deactivated
 function deactivate () {}
 
-module.exports = {
-  activate,
-deactivate}
+module.exports = {activate,deactivate}
 
 // ///////////////////
 // Logic functions //
 // ///////////////////
 
 function manageMainAction (selection) {
-  if (selection === options.oraculo) {
+  if (selection === options.oracle) {
     doOracleCheck()
   } else {
     doDiceCheck()
@@ -55,14 +72,23 @@ function manageMainAction (selection) {
 function doOracleCheck () {
   vscode.window
     .showInputBox({
-      placeHolder: '¿Cómo de probable? (-4 a +4 si es una pregunta al master)',
+      placeHolder: content.oracle.placeHolder,
       validateInput: value => {
         if (isNaN(value)) {
-          return `El valor debe ser un número`
+          return content.oracle.nanError
         }
       }
     })
     .then((modifier) => {
+      return Promise.all([
+        Promise.resolve(modifier),
+        vscode.window
+          .showInputBox({
+            placeHolder: content.diceCheck.reasonPlaceHolder
+          })
+      ])
+    })
+    .then(([modifier, message = content.oracle.defaultQuestion]) => {
       if (modifier === '') modifier = 0
       const fateCheck = fateDiceCheck(parseInt(modifier))
       writeToDocument(fateCheck)
@@ -72,12 +98,12 @@ function doOracleCheck () {
 function doDiceCheck () {
   vscode.window
     .showInputBox({
-      placeHolder: '¿Qué dados lanzar? (20, 100, 1d20, 1d8, f)',
+      placeHolder: content.diceCheck.dicePlaceHolder,
       validateInput: value => {
         if (!value) {
-          return `Debes introducir un valor para los dados`
+          return content.diceCheck.noValueError
         } else if (isNaN(value) && !value.includes('d')) {
-          return `El valor de los dados debe ser un número o en formato xdy (1d4, 2d6, etc...)`
+          return content.diceCheck.nanError
         }
       }
     })
@@ -86,7 +112,7 @@ function doDiceCheck () {
         Promise.resolve(dice),
         vscode.window
           .showInputBox({
-            placeHolder: '¿Cuál es el motivo de la tirada?'
+            placeHolder: content.diceCheck.reasonPlaceHolder
           })
       ])
     })
@@ -99,7 +125,6 @@ function doDiceCheck () {
 ${message}
 ${dice} -> ${diceCheck}
 \`\`\`
-
 `
       writeToDocument(completeCheck)
     })
@@ -184,19 +209,14 @@ function formatFateCheck (fateCheck, modifier, fateCheckValue) {
 ${formattedCheck} + ${modifier} = ${fateCheckValue}
 ${resultInText}
 \`\`\`
-		
 `
 }
 
 function checkFateCheckAnswer (value) {
-  if (value === 8) {
-    return `Definitivamente sí`
-  } else if (value >= 0) {
-    return `Sí`
-  } else if (value > -8) {
-    return `No`
+  if (value >= 0) {
+    return content.diceCheck.yes
   } else {
-    return `Definitivamente no`
+    return content.diceCheck.no
   }
 }
 
@@ -214,26 +234,13 @@ function checkSideOutcome (fateCheck) {
   })
 
   if (positives > 2) {
-    sideOutcome = ` y ocurre algo positivo relacionado con ${getOutcomeTarget()}`
+    sideOutcome = ` ${content.diceCheck.positiveOutcome} ${getOutcomeTarget()}`
   } else if (negatives > 2) {
-    sideOutcome = ` y ocurre algo negativo relacionado con ${getOutcomeTarget()}`
+    sideOutcome = ` ${content.diceCheck.negativeOutcome}`
   }
 
   return sideOutcome
 }
-
-const outcomeTargets = [
-  `uno de tus aspectos`,
-  `uno de tus proezas`,
-  `uno de tus aliados`,
-  `uno de tus enemigos`,
-  `lo que intentabas hacer`,
-  `el escenario donde estás`,
-  `un aspecto temporal beneficioso para ti`,
-  `un aspecto temporal perjudicial para ti`,
-  `tu concepto de personaje`,
-  `tu personaje`
-]
 
 function getOutcomeTarget () {
   const index = Math.floor(Math.random() * 10) + 1
