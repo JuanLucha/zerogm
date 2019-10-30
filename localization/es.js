@@ -1,8 +1,13 @@
 exports.es = {
   mainMenu: {
     oracle: 'oráculo',
-    diceCheck: 'tirada de dado'
+    diceCheck: 'tirada de dado',
+    changeLanguage: 'cambiar idioma'
   },
+  languages: [
+    {name: 'Inglés' , code: 'en'},
+    {name: 'Español' , code: 'es'},
+  ],
   oracle: {
     placeHolder: '¿Cómo de probable? (-4 a +4 si es una pregunta al master)',
     question: '¿Cuál es la pregunta?',

@@ -16,7 +16,14 @@ let content
 // Main menu options
 let options
 
+// Will store the targets of the outcomes from the Oracle checks
 let outcomeTargets
+
+// Local storage
+let storage
+
+// Language of the messages shown to the user
+let language
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -30,13 +37,8 @@ function activate (context) {
   console.log('Congratulations, your extension "zerogm" is now active!')
 
   // Get the language and set the variables
-  let language = context.globalState.get(mementoKeys.language) || defaultLanguage
-  content = languagesContent[language]
-  outcomeTargets = content.diceCheck.outcomes
-  options = {
-    oracle: `1. ${content.mainMenu.oracle}`,
-    diceCheck: `2. ${content.mainMenu.diceCheck}`
-  }
+  storage = context.globalState
+  loadLanguage()
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
@@ -45,7 +47,7 @@ function activate (context) {
     // The code you place here will be executed every time your command is executed
 
     // Display a message box to the user
-    vscode.window.showQuickPick([options.oracle, options.diceCheck]).then(manageMainAction)
+    vscode.window.showQuickPick([options.oracle, options.diceCheck, options.changeLanguage]).then(manageMainAction)
   })
 
   context.subscriptions.push(disposable)
@@ -62,10 +64,16 @@ module.exports = {activate,deactivate}
 // ///////////////////
 
 function manageMainAction (selection) {
-  if (selection === options.oracle) {
-    doOracleCheck()
-  } else {
-    doDiceCheck()
+  switch (selection) {
+    case options.oracle:
+      doOracleCheck()
+      break
+    case options.diceCheck:
+      doDiceCheck()
+      break
+    case options.changeLanguage:
+      changeLanguage()
+      break
   }
 }
 
@@ -246,4 +254,30 @@ function getOutcomeTarget () {
   const index = Math.floor(Math.random() * 10) + 1
 
   return outcomeTargets[index]
+}
+
+function changeLanguage () {
+  const languageOptions = content.languages.map((language, index) => {
+    return `${index+1}. ${language.name} (${language.code})`
+  })
+  vscode.window.showQuickPick(languageOptions).then(selectedLanguage => {
+    if (selectedLanguage) {
+      const languageCode = selectedLanguage.match(/\(([^)]+)\)/)[1]
+      storage.update(mementoKeys.language, languageCode)
+        .then(() => {
+          loadLanguage()
+        })
+    }
+  })
+}
+
+function loadLanguage () {
+  language = storage.get(mementoKeys.language) || defaultLanguage
+  content = languagesContent[language]
+  outcomeTargets = content.diceCheck.outcomes
+  options = {
+    oracle: `1. ${content.mainMenu.oracle}`,
+    diceCheck: `2. ${content.mainMenu.diceCheck}`,
+    changeLanguage: `3. ${content.mainMenu.changeLanguage}`
+  }
 }

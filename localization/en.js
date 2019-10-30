@@ -1,8 +1,13 @@
 exports.en = {
   mainMenu: {
     oracle: 'oracle',
-    diceCheck: 'dice check'
+    diceCheck: 'dice check',
+    changeLanguage: 'change language'
   },
+  languages: [
+    {name: 'English' , code: 'en'},
+    {name: 'Spanish' , code: 'es'},
+  ],
   oracle: {
     placeHolder: 'How probable is it? (-4 to +4)',
     question: 'Which is the question?',
