@@ -98,7 +98,7 @@ function doOracleCheck () {
     })
     .then(([modifier, message = content.oracle.defaultQuestion]) => {
       if (modifier === '') modifier = 0
-      const fateCheck = fateDiceCheck(parseInt(modifier))
+      const fateCheck = fateDiceCheck(parseInt(modifier), message)
       writeToDocument(fateCheck)
     })
 }
@@ -110,7 +110,7 @@ function doDiceCheck () {
       validateInput: value => {
         if (!value) {
           return content.diceCheck.noValueError
-        } else if (isNaN(value) && !value.includes('d')) {
+        } else if (isNaN(value) && !value.includes('d') && !value.includes('+') && !value.includes('-')) {
           return content.diceCheck.nanError
         }
       }
@@ -124,16 +124,24 @@ function doDiceCheck () {
           })
       ])
     })
-    .then(([dice, message = '']) => {
+    .then(([dice, message]) => {
       const diceCheck = checkDice(dice)
       if (!dice.includes('d')) {
         dice = `1d${dice}`
       }
-      const completeCheck = `\`\`\`
+      let completeCheck
+      if (message) {
+        completeCheck = `\`\`\`
 ${message}
 ${dice} -> ${diceCheck}
 \`\`\`
 `
+      } else {
+        completeCheck = `\`\`\`
+${dice} -> ${diceCheck}
+\`\`\`
+`
+      }
       writeToDocument(completeCheck)
     })
 }
@@ -141,6 +149,7 @@ ${dice} -> ${diceCheck}
 function checkDice (dice) {
   let numberOfDices = 1
   let kindOfDice
+  let modifier
   if (dice.toLowerCase().includes('d')) {
     const parsedDice = dice.toLowerCase().split('d')
     numberOfDices = parsedDice[0]
@@ -148,15 +157,23 @@ function checkDice (dice) {
   } else {
     kindOfDice = dice
   }
+  if (kindOfDice.includes('+')) {
+    modifier = parseInt(kindOfDice.split('+')[1])
+    kindOfDice = kindOfDice.split('+')[0]
+  }
+  if (kindOfDice.includes('-')) {
+    modifier = -parseInt(kindOfDice.split('-')[1])
+    kindOfDice = kindOfDice.split('-')[0]
+  }
   let result = []
   times(numberOfDices, () => {
-    const check = Math.floor(Math.random() * kindOfDice + 1)
+    let check = Math.floor(Math.random() * kindOfDice + 1)
     result.push(check)
   })
-  return formatDiceCheck(result)
+  return formatDiceCheck(result, modifier)
 }
 
-function formatDiceCheck (results) {
+function formatDiceCheck (results, modifier) {
   let resultCheck = ''
   let total = 0
 
@@ -169,16 +186,19 @@ function formatDiceCheck (results) {
       resultCheck += ` = `
     }
   })
+  if (modifier) {
+    total = total + modifier
+  }
   resultCheck += ` ${total}`
 
   return resultCheck
 }
 
-function fateDiceCheck (modifier) {
+function fateDiceCheck (modifier, message) {
   let fateCheck = [0, 0, 0, 0]
   fateCheck = fateCheck.map(() => fateDice())
   const fateCheckValue = fateCheck.reduce((acumulator, dice) => acumulator + dice) + modifier
-  return formatFateCheck(fateCheck, modifier, fateCheckValue)
+  return formatFateCheck(fateCheck, modifier, fateCheckValue, message)
 }
 
 function fateDice () {
@@ -193,8 +213,8 @@ function writeToDocument (value) {
   })
 }
 
-function formatFateCheck (fateCheck, modifier, fateCheckValue) {
-  let formattedCheck = fateCheck.reduce((accumulator, value, index) => {
+function formatFateCheck (fateCheck, modifier, fateCheckValue, message) {
+  let formattedCheck = fateCheck.reduce((accumulator, value) => {
     switch (value) {
       case -1:
         accumulator += '- '
@@ -213,11 +233,23 @@ function formatFateCheck (fateCheck, modifier, fateCheckValue) {
   let resultInText = checkFateCheckAnswer(fateCheckValue)
   resultInText += checkSideOutcome(fateCheck)
 
-  return `\`\`\`
+  let formattedMessage
+  if (message) {
+    formattedMessage = `\`\`\`
+${message}
 ${formattedCheck} + ${modifier} = ${fateCheckValue}
 ${resultInText}
 \`\`\`
 `
+  } else {
+    formattedMessage = `\`\`\`
+${formattedCheck} + ${modifier} = ${fateCheckValue}
+${resultInText}
+\`\`\`
+`
+  }
+
+  return formattedMessage
 }
 
 function checkFateCheckAnswer (value) {
@@ -251,7 +283,7 @@ function checkSideOutcome (fateCheck) {
 }
 
 function getOutcomeTarget () {
-  const index = Math.floor(Math.random() * 10) + 1
+  const index = Math.floor(Math.random() * 10 + 1)
 
   return outcomeTargets[index]
 }
