@@ -16,11 +16,9 @@ Basically, when you need the input from the master, you execute the task `ZeroGM
 
 `cmd+shift+p` (or `ctrl+shift+p` in Windows) to open the command window, then write `zerogm` and press `enter` (you don't have to write the whole word, there are few commands starting with zero :D)
 
-Then you will see the ZeroGM menu. If you want to make a yes/no check, select the first option or write `1` and press `enter`.
+Then you will see the ZeroGM menu. If you want to make a yes/no check, you need an oracle. Select the first option or write `1` and press `enter` for Mythic Game Emulator (sold in [Word Mill Games](https://www.wordmillgames.com/)). If you want a custom using Fate Dice, choose `3`. Note: number `2` is Recluse, another oracle not implemented.
 
-Then you will see the modifier window. Write a number between -4 and +4 and press `enter`. If the question asked is more likely to be a "yes", put a positive number. If it's the contrary, put a negative number.
-
-The answer is self explanatory, and as you can see it takes into consideration you having a Fate character.
+Then you need to follow the instructions to use the oracles for your yes/no and details answers.
 
 ### The dice thrower
 
@@ -28,7 +26,7 @@ When you need to throw a dice you can do it by:
 
 `cmd+shift+p` (or `ctrl+shift+p` in Windows) to open the command window, then write `zerogm` and press `enter` (you don't have to write the whole word, there are few commands starting with zero :D)
 
-Then you will see the ZeroGM menu. If you want to throw any dice, select the second option or write `2` and press `enter`.
+Then you will see the ZeroGM menu. If you want to throw any dice, select the second option or write `4` and press `enter`.
 
 Then you will be shown a window to input the dice you want to throw. It accepts single numbers (`20` for a d20, `8` for a `d8`, etc) or multiple dice notation (`2d20`, `6d6` Fireball!!!). Write the dice and press `enter`.
 
@@ -52,7 +50,7 @@ Si, es posible. Puedes encontrar más información sobre cómo jugar solo en el 
 
 ## Vale, entonces, ¿cómo uso ZeroGM?
 
-### El simulador de director de juego
+### El simulador de director de juego
 
 Básicamente, cuando necesites una respuesta del director de juego, ejecuta la tarea `ZeroGM`:
 
@@ -60,9 +58,9 @@ Básicamente, cuando necesites una respuesta del director de juego, ejecuta la t
 
 Entonces verás el menú de ZeroGM. Si lo que quieres es hacer una pregunta de sí/no, seleciona la primera opción o escribe `1` y pulsa `intro`.
 
-Entonces verás la pantalla de modificador. Escribe un número entre -4 y +4 y pulsa `intro`. Si es probable que la respuesta sea sí, escribe un número positivo. En el caso contrario, escribe un número negativo.
+Entonces verás el menú de ZeroGM. Si quieres hacer una pregunta de sí/no, necesitas un oráculo. Elige la primera opción o escribe `1` y pulsa `intro` para usar el Mythic Game Emulator (vendido en [Word Mill Games](https://www.wordmillgames.com/)). Si quieres un oráculo basado en dados Fate, selecciona `3`. Nota: el número `2` es Recluse, otro oráculo que no está implementado aún.
 
-La respuesta es autoexplicativa, y como puedes comprobar tiene en cuenta que tienes una ficha de personaje de Fate.
+Entonces tienes que seguir las instrucciones para usar el oráculo en cuestión para conseguir tu respuesta de sí/no y de detalles.
 
 ### Tiradas de dados
 
@@ -70,7 +68,7 @@ Puedes tirar cualquier dado haciendo lo siguiente:
 
 `cmd+shift+p` (o `ctrl+shift+p` en Windows) para abrir la ventana de comandos, entonces escribe `zerogm` y pulsa la tecla `intro` (no necesitas escribir la palabra completa, no hay muchos comandos que empiezen por zero :D)
 
-Entonces verás el menú de ZeroGM. Si lo que quieres es hacer una tirada de dados, seleciona la segunda opción o escribe `2` y pulsa `intro`.
+Entonces verás el menú de ZeroGM. Si lo que quieres es hacer una tirada de dados, seleciona la segunda opción o escribe `4` y pulsa `intro`.
 
 Entonces verás la pantalla de introducción de dados. Acepta formatos númericos (`20` para un d20, `8` para un `d8`, etc) o notación de dado múltiple (`2d20`, `6d6` ¡Bola de fuego!). Escribe el dado y pulsa `intro`.
 
