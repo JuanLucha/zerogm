@@ -1,18 +1,20 @@
 exports.es = {
   mainMenu: {
+    mythic: 'Mythic',
+    recluse: 'Recluse',
     oracle: 'oráculo',
     diceCheck: 'tirada de dado',
-    changeLanguage: 'cambiar idioma'
+    changeLanguage: 'cambiar idioma',
   },
   languages: [
-    {name: 'Inglés' , code: 'en'},
-    {name: 'Español' , code: 'es'},
+    { name: 'Inglés', code: 'en' },
+    { name: 'Español', code: 'es' },
   ],
   oracle: {
     placeHolder: '¿Cómo de probable? (-4 a +4 si es una pregunta al master)',
     question: '¿Cuál es la pregunta?',
     nanError: `El valor debe ser un número`,
-    defaultQuestion: 'Pregunta al oráculo'
+    defaultQuestion: 'Pregunta al oráculo',
   },
   diceCheck: {
     dicePlaceHolder: '¿Qué dados lanzar? (20, 100, 1d20, 1d8, f)',
@@ -35,7 +37,28 @@ exports.es = {
       `un aspecto temporal beneficioso para ti`,
       `un aspecto temporal perjudicial para ti`,
       `tu concepto de personaje`,
-      `tu personaje`
-    ]
-  }
+      `tu personaje`,
+    ],
+  },
+  mythic: {
+    chaosFactor: 'Factor de Caos',
+    setChaosFactor: 'Asignar Factor de Caos',
+    increaseChaosFactor: 'Incrementar Factor de Caos',
+    decreaseChaosFactor: 'Disminuir Factor de Caos',
+    fateCheck: 'Tirada de destino',
+    eventCheck: 'Tirada de evento',
+    getEventMeaning: 'Tirada de significado de evento',
+    getAction: 'Tirada de acción',
+    getDescription: 'Tirada de descripción',
+    detailsCheck: 'Tirada de detalles',
+    chaosFactorIs: 'El factor de caos es',
+    chaosFactorIncreased: 'Factor de caos incrementado',
+    chaosFactorDecreased: 'Factor de caos reducido',
+    newChaosFactorIs: 'El nuevo factor de caos es',
+    howLikely: '¿Cómo de probable es la pregunta? (de -8 a +8, vacío para 0)',
+    setTheChaosFactor: 'Asigna un nuevo valor al factor de caos, de 3 a 6',
+  },
+  globalErrors: {
+    mustBeNumber: 'Debe ser un número',
+  },
 }
