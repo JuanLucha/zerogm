@@ -1,7 +1,7 @@
 const inCode = (text) => `
-\'\'\'
+\`\`\`
 ${text}
-\'\'\'
+\`\`\`
 `
 
 const writeToDocument = (value, vscode) => {
