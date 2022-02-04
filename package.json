@@ -36,7 +36,17 @@
     }
   ],
   "activationEvents": [
-    "onCommand:extension.zeroGM"
+    "onCommand:extension.zeroGM",
+    "onCommand:extension.zeroGM.mythic.fateCheck",
+    "onCommand:extension.zeroGM.mythic.eventCheck",
+    "onCommand:extension.zeroGM.mythic.detailsCheck",
+    "onCommand:extension.zeroGM.mythic.chaosFactor",
+    "onCommand:extension.zeroGM.mythic.increaseChaosFactor",
+    "onCommand:extension.zeroGM.mythic.decreaseChaosFactor",
+    "onCommand:extension.zeroGM.mythic.setChaosFactor",
+    "onCommand:extension.zeroGM.mythic.getEventMeaning",
+    "onCommand:extension.zeroGM.mythic.getAction",
+    "onCommand:extension.zeroGM.mythic.getDescription"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -44,6 +54,46 @@
       {
         "command": "extension.zeroGM",
         "title": "Zero GM"
+      },
+      {
+        "command": "extension.zeroGM.mythic.fateCheck",
+        "title": "Mythic Fate Check"
+      },
+      {
+        "command": "extension.zeroGM.mythic.eventCheck",
+        "title": "Mythic Event Check"
+      },
+      {
+        "command": "extension.zeroGM.mythic.detailsCheck",
+        "title": "Mythic Details Check"
+      },
+      {
+        "command": "extension.zeroGM.mythic.chaosFactor",
+        "title": "Mythic Get Chaos Factor"
+      },
+      {
+        "command": "extension.zeroGM.mythic.increaseChaosFactor",
+        "title": "Mythic Increase Chaos Factor"
+      },
+      {
+        "command": "extension.zeroGM.mythic.decreaseChaosFactor",
+        "title": "Mythic Decrease Chaos Factor"
+      },
+      {
+        "command": "extension.zeroGM.mythic.setChaosFactor",
+        "title": "Mythic Set Chaos Factor"
+      },
+      {
+        "command": "extension.zeroGM.mythic.getEventMeaning",
+        "title": "Mythic Get Event Meaning"
+      },
+      {
+        "command": "extension.zeroGM.mythic.getAction",
+        "title": "Mythic Get Action"
+      },
+      {
+        "command": "extension.zeroGM.mythic.getDescription",
+        "title": "Mythic Get Description"
       }
     ]
   },

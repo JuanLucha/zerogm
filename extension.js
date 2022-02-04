@@ -1,6 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-
 const vscode = require('vscode')
 const times = require('lodash').times
 const languagesContent = require('./localization/index')
@@ -47,12 +44,8 @@ function activate(context) {
   storage = context.globalState
   loadLanguage()
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
   let disposable = vscode.commands.registerCommand('extension.zeroGM', () => {
-    // The code you place here will be executed every time your command is executed
-
     // Display a message box to the user
     vscode.window
       .showQuickPick([
@@ -67,6 +60,52 @@ function activate(context) {
 
   context.subscriptions.push(disposable)
   mythic = require('./systems/mythic').mythicFactory(vscode, content)
+
+  // Mythic commands
+  const mythicCommands = [
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.fateCheck',
+      mythic.doFateCheck
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.eventCheck',
+      mythic.doEventCheck
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.detailsCheck',
+      mythic.doDetailsCheck
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.chaosFactor',
+      mythic.getChaosFactor
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.increaseChaosFactor',
+      mythic.increaseChaosFactor
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.decreaseChaosFactor',
+      mythic.decreaseChaosFactor
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.setChaosFactor',
+      mythic.setChaosFactor
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.getEventMeaning',
+      mythic.getEventMeaning
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.getAction',
+      mythic.getAction
+    ),
+    vscode.commands.registerCommand(
+      'extension.zeroGM.mythic.getDescription',
+      mythic.getDescription
+    ),
+  ]
+  context.subscriptions.push(mythicCommands)
+
   writeToDocument =
     require('./tools/markdown').markdownToolsFactory(vscode).writeToDocument
 }
@@ -131,10 +170,13 @@ function doDiceCheck() {
     .showInputBox({
       placeHolder: content.diceCheck.dicePlaceHolder,
       validateInput: (value) => {
-        if (!value) {
+        if (value.trim() === '') {
+          return true
+        } else if (!value) {
           return content.diceCheck.noValueError
         } else if (
           isNaN(value) &&
+          !value.includes('f') &&
           !value.includes('d') &&
           !value.includes('+') &&
           !value.includes('-')
@@ -152,24 +194,31 @@ function doDiceCheck() {
       ])
     })
     .then(([dice, message]) => {
-      const diceCheck = checkDice(dice)
-      if (!dice.includes('d')) {
-        dice = `1d${dice}`
-      }
-      let completeCheck
-      if (message) {
-        completeCheck = `\`\`\`
+      let diceCheck
+      if (dice.trim() === '' || dice.includes('f')) {
+        dice = '4df'
+        diceCheck = fateDiceCheck(0, message)
+        writeToDocument(diceCheck)
+      } else {
+        diceCheck = checkDice(dice)
+        if (!dice.includes('d')) {
+          dice = `1d${dice}`
+        }
+        let completeCheck
+        if (message) {
+          completeCheck = `\`\`\`
 ${message}
 ${dice} -> ${diceCheck}
 \`\`\`
 `
-      } else {
-        completeCheck = `\`\`\`
+        } else {
+          completeCheck = `\`\`\`
 ${dice} -> ${diceCheck}
 \`\`\`
 `
+        }
+        writeToDocument(completeCheck)
       }
-      writeToDocument(completeCheck)
     })
 }
 

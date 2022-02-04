@@ -31,110 +31,121 @@ exports.mythicFactory = (_vscode, _content) => {
         if (!selectedOption) return
         switch (selectedOption) {
           case mythicOptions[0]:
-            doFateCheck(vscode, content)
+            this.doFateCheck()
             break
           case mythicOptions[1]:
-            writeToDocument(inCode(mythic.eventCheck()))
+            this.doEventCheck()
             break
           case mythicOptions[2]:
-            writeToDocument(inCode(mythic.detailsCheck()))
+            this.doDetailsCheck()
             break
           case mythicOptions[3]:
-            writeToDocument(
-              inCode(`${content.mythic.chaosFactorIs} ${mythic.chaosFactor}`)
-            )
+            this.getChaosFactor()
             break
           case mythicOptions[4]:
-            mythic.increaseChaosFactor()
-            writeToDocument(
-              inCode(
-                `${content.mythic.chaosFactorIncreased}\n${content.mythic.newChaosFactorIs} ${mythic.chaosFactor}`
-              )
-            )
+            this.increaseChaosFactor()
             break
           case mythicOptions[5]:
-            mythic.decreaseChaosFactor()
-            writeToDocument(
-              inCode(
-                `${content.mythic.chaosFactorDecreased}\n${content.mythic.newChaosFactorIs} ${mythic.chaosFactor}`
-              )
-            )
+            this.decreaseChaosFactor()
             break
           case mythicOptions[6]:
-            setChaosFactor()
+            this.setChaosFactor()
             break
           case mythicOptions[7]:
-            writeToDocument(inCode(mythic.getEventMeaning()))
+            this.getEventMeaning()
             break
           case mythicOptions[8]:
-            writeToDocument(inCode(mythic.getActions()))
+            this.getAction()
             break
           case mythicOptions[9]:
-            writeToDocument(inCode(mythic.getDescriptors()))
+            this.getDescription()
             break
           default:
             return
         }
       })
     },
-  }
-}
-
-const doFateCheck = (vscode, content) => {
-  vscode.window
-    .showInputBox({
-      placeHolder: content.diceCheck.reasonPlaceHolder,
-    })
-    .then((reason) => {
-      return Promise.all([
-        Promise.resolve(reason),
-        vscode.window.showInputBox({
-          placeHolder: content.mythic.howLikely,
+    doFateCheck: () => {
+      vscode.window
+        .showInputBox({
+          placeHolder: content.diceCheck.reasonPlaceHolder,
+        })
+        .then((reason) => {
+          return Promise.all([
+            Promise.resolve(reason),
+            vscode.window.showInputBox({
+              placeHolder: content.mythic.howLikely,
+              validateInput: (value) => {
+                if (isNaN(value)) {
+                  return content.globalErrors.mustBeNumber
+                }
+              },
+            }),
+          ])
+        })
+        .then(([message = content.oracle.defaultQuestion, modifier]) => {
+          if (
+            modifier === '' ||
+            (parseInt(modifier) < -8 && parseInt(modifier) > 8)
+          )
+            modifier = 0
+          modifier = parseInt(modifier)
+          let fateCheck = content.mythic.fateCheck
+          fateCheck += message ? `: ${message}` : ''
+          fateCheck += `\n${mythic.fateCheck(modifier)}`
+          writeToDocument(inCode(fateCheck))
+        })
+    },
+    doEventCheck: () => writeToDocument(inCode(mythic.eventCheck())),
+    doDetailsCheck: () => writeToDocument(inCode(mythic.detailsCheck())),
+    setChaosFactor: () => {
+      vscode.window
+        .showInputBox({
+          placeHolder: content.mythic.setTheNewChaosFactor,
           validateInput: (value) => {
             if (isNaN(value)) {
               return content.globalErrors.mustBeNumber
             }
           },
-        }),
-      ])
-    })
-    .then(([message = content.oracle.defaultQuestion, modifier]) => {
-      if (
-        modifier === '' ||
-        (parseInt(modifier) < -8 && parseInt(modifier) > 8)
-      )
-        modifier = 0
-      modifier = parseInt(modifier)
-      let fateCheck = content.mythic.fateCheck
-      fateCheck += message ? `: ${message}` : ''
-      fateCheck += `\n${mythic.fateCheck(modifier)}`
-      writeToDocument(inCode(fateCheck))
-    })
-}
-
-const setChaosFactor = () => {
-  vscode.window
-    .showInputBox({
-      placeHolder: content.mythic.setTheNewChaosFactor,
-      validateInput: (value) => {
-        if (isNaN(value)) {
-          return content.globalErrors.mustBeNumber
-        }
-      },
-    })
-    .then((newChaosFactor) => {
-      newChaosFactor =
-        newChaosFactor === ''
-          ? 0
-          : parseInt(newChaosFactor) < 3
-          ? 3
-          : parseInt(newChaosFactor) > 6
-          ? 6
-          : newChaosFactor
-      newChaosFactor = parseInt(newChaosFactor)
-      mythic.setChaosFactor(newChaosFactor)
+        })
+        .then((newChaosFactor) => {
+          newChaosFactor =
+            newChaosFactor === ''
+              ? 0
+              : parseInt(newChaosFactor) < 3
+              ? 3
+              : parseInt(newChaosFactor) > 6
+              ? 6
+              : newChaosFactor
+          newChaosFactor = parseInt(newChaosFactor)
+          mythic.setChaosFactor(newChaosFactor)
+          writeToDocument(
+            inCode(`${content.mythic.newChaosFactorIs} ${newChaosFactor}`)
+          )
+        })
+    },
+    getChaosFactor: () =>
       writeToDocument(
-        inCode(`${content.mythic.newChaosFactorIs} ${newChaosFactor}`)
+        inCode(`${content.mythic.chaosFactorIs} ${mythic.chaosFactor}`)
+      ),
+    increaseChaosFactor: () => {
+      mythic.increaseChaosFactor()
+      writeToDocument(
+        inCode(
+          `${content.mythic.chaosFactorIncreased}\n${content.mythic.newChaosFactorIs} ${mythic.chaosFactor}`
+        )
       )
-    })
+    },
+    decreaseChaosFactor: () => {
+      mythic.decreaseChaosFactor()
+      writeToDocument(
+        inCode(
+          `${content.mythic.chaosFactorDecreased}\n${content.mythic.newChaosFactorIs} ${mythic.chaosFactor}`
+        )
+      )
+    },
+    getEventMeaning: () => writeToDocument(inCode(mythic.getEventMeaning())),
+    getAction: () => writeToDocument(inCode(mythic.getActions())),
+    getDescription: () => writeToDocument(inCode(mythic.getDescriptors())),
+  }
 }
