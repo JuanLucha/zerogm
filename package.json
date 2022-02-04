@@ -2,9 +2,9 @@
   "name": "zerogm",
   "displayName": "ZeroGM",
   "description": "GM simulator to play any roleplaying games solo, but specially Fate RPG or Fate Accelerated RPG",
-  "version": "0.0.9",
+  "version": "0.5.0",
   "repository": {
-    "url": "https://github.com/Ravencrow/zerogm",
+    "url": "https://github.com/JuanLucha/zerogm",
     "type": "git"
   },
   "engines": {
@@ -25,7 +25,8 @@
     "fate",
     "rpg",
     "gm simulator",
-    "game master simulator"
+    "game master simulator",
+    "tabletop roleplaying game"
   ],
   "icon": "zerogm-logo.png",
   "keybindings": [
