@@ -2,7 +2,7 @@
   "name": "zerogm",
   "displayName": "ZeroGM",
   "description": "GM simulator to play any roleplaying games solo, but specially Fate RPG or Fate Accelerated RPG",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "repository": {
     "url": "https://github.com/JuanLucha/zerogm",
     "type": "git"
@@ -37,17 +37,7 @@
     }
   ],
   "activationEvents": [
-    "onCommand:extension.zeroGM",
-    "onCommand:extension.zeroGM.mythic.fateCheck",
-    "onCommand:extension.zeroGM.mythic.eventCheck",
-    "onCommand:extension.zeroGM.mythic.detailsCheck",
-    "onCommand:extension.zeroGM.mythic.chaosFactor",
-    "onCommand:extension.zeroGM.mythic.increaseChaosFactor",
-    "onCommand:extension.zeroGM.mythic.decreaseChaosFactor",
-    "onCommand:extension.zeroGM.mythic.setChaosFactor",
-    "onCommand:extension.zeroGM.mythic.getEventMeaning",
-    "onCommand:extension.zeroGM.mythic.getAction",
-    "onCommand:extension.zeroGM.mythic.getDescription"
+    "*"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -95,8 +85,55 @@
       {
         "command": "extension.zeroGM.mythic.getDescription",
         "title": "Mythic Get Description"
+      },
+      {
+        "command": "zeroGM.oracleCheck",
+        "title": "Oracle Check",
+        "icon": "$(crystal-ball)"
+      },
+      {
+        "command": "zeroGM.diceCheck",
+        "title": "Dice Check",
+        "icon": "$(symbol-numeric)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "zeroGM",
+          "title": "Zero GM",
+          "icon": "zerogm-logo.png"
+        }
+      ]
+    },
+    "views": {
+      "zeroGM": [
+        {
+          "id": "zeroGMMythic",
+          "name": "Mythic System",
+          "when": "true"
+        },
+        {
+          "id": "zeroGMOracle",
+          "name": "Oracle & Dice",
+          "when": "true"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "zeroGM.oracleCheck",
+          "when": "view == zeroGMOracle",
+          "group": "navigation"
+        },
+        {
+          "command": "zeroGM.diceCheck",
+          "when": "view == zeroGMOracle",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "test": "node ./test/runTest.js",

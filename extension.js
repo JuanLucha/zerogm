@@ -44,6 +44,8 @@ function activate(context) {
   storage = context.globalState
   loadLanguage()
 
+  console.log('Language loaded, registering commands...')
+
   // The commandId parameter must match the command field in package.json
   let disposable = vscode.commands.registerCommand('extension.zeroGM', () => {
     // Display a message box to the user
@@ -106,8 +108,33 @@ function activate(context) {
   ]
   context.subscriptions.push(mythicCommands)
 
+  // Register Tree View Providers for sidebar
+  const { ZeroGMMythicProvider, ZeroGMOracleProvider } = require('./sidebar/treeProviders');
+  
+  const mythicProvider = new ZeroGMMythicProvider(mythic, content);
+  const oracleProvider = new ZeroGMOracleProvider(content);
+  
+  vscode.window.createTreeView('zeroGMMythic', {
+    treeDataProvider: mythicProvider
+  });
+  
+  vscode.window.createTreeView('zeroGMOracle', {
+    treeDataProvider: oracleProvider
+  });
+
+  // Oracle and Dice commands for the sidebar
+  const sidebarCommands = [
+    vscode.commands.registerCommand('zeroGM.oracleCheck', doOracleCheck),
+    vscode.commands.registerCommand('zeroGM.diceCheck', doDiceCheck),
+    vscode.commands.registerCommand('extension.zeroGM.changeLanguage', changeLanguage)
+  ];
+
+  context.subscriptions.push(...sidebarCommands);
+
   writeToDocument =
     require('./tools/markdown').markdownToolsFactory(vscode).writeToDocument
+  
+  console.log('Extension activation completed')
 }
 exports.activate = activate
 

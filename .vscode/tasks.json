@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Extension",
+			"type": "shell",
+			"command": "code",
+			"args": [
+				"--extensionDevelopmentPath=/Users/lucha/code/zerogm",
+				"--new-window"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

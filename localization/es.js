@@ -1,10 +1,10 @@
 exports.es = {
   mainMenu: {
-    mythic: 'Mythic',
-    recluse: 'Recluse',
-    oracle: 'oráculo',
-    diceCheck: 'tirada de dado',
-    changeLanguage: 'cambiar idioma',
+    mythic: "Mythic",
+    recluse: "Recluse",
+    oracle: "oráculo",
+    diceCheck: "tirada de dado",
+    changeLanguage: "cambiar idioma",
   },
   languages: [
     { name: 'Inglés', code: 'en' },
